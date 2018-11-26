@@ -11,7 +11,7 @@ RUN addgroup vault && \
 # Set up certificates, our base tools, and Vault.
 RUN set -eux; \
     apt-get update && apt-get install -y wget unzip gnupg openssl libcap2-bin gosu && \
-    apkArch="$(apk --print-arch)"; \
+    apkArch="$(uname -m)"; \
     case "$apkArch" in \
         armhf) ARCH='arm' ;; \
         aarch64) ARCH='arm64' ;; \
