@@ -1,7 +1,7 @@
 FROM debian:stretch
 
 # This is the release of Vault to pull in.
-ENV VAULT_VERSION=0.11.5
+ARG VAULT_VERSION=1.1.2
 
 # Create a vault user and group first so the IDs get set the same way,
 # even as the rest of this may change over time.
@@ -10,13 +10,18 @@ RUN addgroup vault && \
 
 # Set up certificates, our base tools, and Vault.
 RUN set -eux; \
+<<<<<<< HEAD
     apt-get update && apt-get install -y wget unzip gnupg openssl libcap2-bin gosu && \
     apkArch="$(uname -m)"; \
+=======
+    apk add --no-cache ca-certificates gnupg openssl libcap su-exec dumb-init tzdata && \
+    apkArch="$(apk --print-arch)"; \
+>>>>>>> master
     case "$apkArch" in \
         armhf) ARCH='arm' ;; \
         aarch64) ARCH='arm64' ;; \
         x86_64) ARCH='amd64' ;; \
-        x86) ARCH='386' ;; \ 
+        x86) ARCH='386' ;; \
         *) echo >&2 "error: unsupported architecture: $apkArch"; exit 1 ;; \
     esac && \
     VAULT_GPGKEY=91A6E7F85D05C65630BEF18951852D87348FFC4C; \
@@ -27,7 +32,11 @@ RUN set -eux; \
         hkp://pgp.mit.edu:80 \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
+<<<<<<< HEAD
         gpg --no-tty --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+=======
+        gpg --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+>>>>>>> master
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \
