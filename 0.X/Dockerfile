@@ -10,13 +10,8 @@ RUN addgroup vault && \
 
 # Set up certificates, our base tools, and Vault.
 RUN set -eux; \
-<<<<<<< HEAD
-    apt-get update && apt-get install -y wget unzip gnupg openssl libcap2-bin gosu && \
+    apt-get update && apt-get install -y wget unzip gnupg openssl libcap2-bin gosu tzdata && \
     apkArch="$(uname -m)"; \
-=======
-    apk add --no-cache ca-certificates gnupg openssl libcap su-exec dumb-init tzdata && \
-    apkArch="$(apk --print-arch)"; \
->>>>>>> master
     case "$apkArch" in \
         armhf) ARCH='arm' ;; \
         aarch64) ARCH='arm64' ;; \
@@ -32,11 +27,7 @@ RUN set -eux; \
         hkp://pgp.mit.edu:80 \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
-<<<<<<< HEAD
-        gpg --no-tty --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
-=======
         gpg --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
->>>>>>> master
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \
